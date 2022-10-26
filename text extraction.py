@@ -1,4 +1,4 @@
-from tkinter import *
+
 import easyocr
 import pandas as pd
 import cv2
