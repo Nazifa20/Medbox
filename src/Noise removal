@@ -1,1 +1,26 @@
-
+import cv2
+import numpy as np
+from tkinter import *
+import easyocr
+import pandas as pd
+import cv2
+img = cv2.imread(r"C:\Users\Nazifa\Pictures\Medicine images\pic 20.jpg")
+gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+blur = cv2.GaussianBlur(gray, (0,0), sigmaX=33, sigmaY=33)
+divide = cv2.divide(gray, blur, scale=255)
+thresh = cv2.threshold(divide, 0,255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)[1]
+kernel = cv2.getStructuringElement(cv2.MORPH_RECT , (2,2))
+morph = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
+reader = easyocr.Reader(["en"])
+result =reader.readtext(morph,paragraph="false")
+df=pd.DataFrame(result)
+print(df[1])
+cv2.imwrite("hebrew_text_division.jpg", divide)
+cv2.imwrite("hebrew_text_division_threshold.jpg",thresh)
+cv2.imwrite("hebrew_text_division_morph.jpg", morph)
+cv2.imshow("gray",gray)
+cv2.imshow("divide", divide)
+cv2.imshow("thresh", thresh)
+cv2.imshow("morph" , morph)
+cv2.waitkey(0)
+cv2.destroyAllWindows
